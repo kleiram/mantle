@@ -1,0 +1,22 @@
+[
+    {
+        "username": "alice",
+        "email": "alice@example.org",
+        "registered_at": "Tue Aug 28 21:16:23 +0000 2012",
+        "_links": {
+            "profile": {
+                "href": "http://example.org/users/alice/profile"
+            }
+        }
+    },
+    {
+        "username": "bob",
+        "email": "bob@example.org",
+        "registered_at": "Tue Aug 28 22:15:01 +0000 2012",
+        "_links": {
+            "profile": {
+                "href": "http://example.org/users/bob/profile"
+            }
+        }
+    }
+]

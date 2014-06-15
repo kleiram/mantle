@@ -1,0 +1,16 @@
+{
+    "age": 42,
+    "username": "alice",
+    "email": "alice@example.org",
+    "registered_at": "Tue Aug 28 21:16:23 +0000 2012",
+    "profile": {
+        "first_name": "Alice",
+        "last_name": "Doe",
+        "location": "127.0.0.1"
+    },
+    "_links": {
+        "profile": {
+            "href": "http://example.org/users/alice/profile"
+        }
+    }
+}

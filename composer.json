@@ -1,0 +1,26 @@
+{
+    "name": "league/mantle",
+    "description": "",
+    "keywords": [
+        "league",
+        "package"
+    ],
+    "homepage": "https://github.com/thephpleague/mantle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ramon Kleiss",
+            "email": "ramonkleiss@gmail.com",
+            "homepage": "https://twitter.com/kleiram",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "symfony/property-access": "~2.3"
+    },
+    "autoload": {
+        "psr-0": {
+            "League": ["src", "tests"]
+        }
+    }
+}
