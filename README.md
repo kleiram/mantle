@@ -214,6 +214,35 @@ that returns (for example) `Vendor\Project\Model\Ticket`. Mantle will transform
 the `tickets` field in the JSON response into an array of `Ticket` models for
 you!
 
+### Existing objects
+
+It happens (sometimes) that you want to update an existing object with new data
+from the server. Well, Mantle handles that too! Instead of passing class name
+as the second argument for Mantle you can pass an existing object:
+
+```php
+<?php
+$data = ...; // Fetch user data from somewhere
+
+$mantle = new Mantle();
+$user   = $mantle->transform($data, 'User');
+
+// A lot of stuff happens, maybe some time passes
+
+$data = ...; // Fetch fresh user data from somewhere
+$user = $mantle->transform($data, $user);
+```
+
+The only requirement is that the `$data` passed is actually an `stdClass` object
+and not an `array` (an array wouldn't make sense in this case since you're only
+transforming a single object).
+
+### Data source
+
+There's no requirement for what kind of data source you have to use. You can
+fetch data from a remote server or a local file or even create a `stdClass`
+object in the application itself and map it using Mantle!
+
 ## Testing
 
 Mantle is fully unit tested. The tests can be run with PHPUnit:
