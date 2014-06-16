@@ -10,7 +10,7 @@ class Mantle
 {
     /**
      * @param array|stdClass $json
-     * @param string         $class
+     * @param string|object  $class
      *
      * @return mixed
      * @throws InvalidArgumentException
@@ -18,12 +18,20 @@ class Mantle
     public function transform($json, $class)
     {
         if (is_array($json)) {
-            return $this->transformArray($json, $class);
+            if (is_string($class)) {
+                return $this->transformArray($json, $class);
+            } else {
+                throw new \InvalidArgumentException(
+                    'Cannot transform a JSON array into an existing object'
+                );
+            }
         } elseif ($json instanceof \stdClass) {
             return $this->transformObject($json, $class);
+        } else {
+            throw new \InvalidArgumentException(
+                'The $json argument must be either an array or an instance of stdClass'
+            );
         }
-
-        throw new \InvalidArgumentException('The $json argument must be either an array or an instance of stdClass');
     }
 
     /**
@@ -40,14 +48,19 @@ class Mantle
     }
 
     /**
-     * @param stdClass $json
-     * @param string   $class
+     * @param stdClass      $json
+     * @param string|object $class
      *
      * @return mixed
      */
     private function transformObject(\stdClass $json, $class)
     {
-        $object = new $class();
+        if (is_string($class)) {
+            $object = new $class();
+        } else {
+            $object = $class;
+        }
+
         $mapping = $this->getPropertyMapping($object);
 
         foreach ($mapping as $destination => $source) {
