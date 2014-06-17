@@ -89,4 +89,29 @@ class MantleTest extends \PHPUnit_Framework_TestCase
         $mantle = new Mantle();
         $mantle->transform($data, $data);
     }
+
+    public function testCallsCallbackWhenTransformingObject()
+    {
+        $data = json_decode(file_get_contents(__DIR__.'/../../../data/user.json'));
+
+        $mantle = new Mantle();
+        $user = $mantle->transform($data, 'League\Mantle\Stub\User', function ($user) {
+            $user->username = 'user_'. $user->username;
+        });
+
+        $this->assertEquals('user_alice', $user->username);
+    }
+
+    public function testCallsCallbackWhenTransformingArray()
+    {
+        $data = json_decode(file_get_contents(__DIR__.'/../../../data/users.json'));
+
+        $mantle = new Mantle();
+        $users = $mantle->transform($data, 'League\Mantle\Stub\User', function ($user) {
+            $user->username = 'user_'. $user->username;
+        });
+
+        $this->assertEquals('user_alice', $users[0]->username);
+        $this->assertEquals('user_bob', $users[1]->username);
+    }
 }

@@ -11,22 +11,23 @@ class Mantle
     /**
      * @param array|stdClass $json
      * @param string|object  $class
+     * @param Callable       $callback
      *
      * @return mixed
      * @throws InvalidArgumentException
      */
-    public function transform($json, $class)
+    public function transform($json, $class, $callback = null)
     {
         if (is_array($json)) {
             if (is_string($class)) {
-                return $this->transformArray($json, $class);
+                return $this->transformArray($json, $class, $callback);
             } else {
                 throw new \InvalidArgumentException(
                     'Cannot transform a JSON array into an existing object'
                 );
             }
         } elseif ($json instanceof \stdClass) {
-            return $this->transformObject($json, $class);
+            return $this->transformObject($json, $class, $callback);
         } else {
             throw new \InvalidArgumentException(
                 'The $json argument must be either an array or an instance of stdClass'
@@ -35,25 +36,27 @@ class Mantle
     }
 
     /**
-     * @param array  $json
-     * @param string $class
+     * @param array     $json
+     * @param string    $class
+     * @param Callable  $callback
      *
      * @return mixed
      */
-    private function transformArray(array $json, $class)
+    private function transformArray(array $json, $class, $callback)
     {
-        return array_map(function ($json) use ($class) {
-            return $this->transformObject($json, $class);
+        return array_map(function ($json) use ($class, $callback) {
+            return $this->transformObject($json, $class, $callback);
         }, $json);
     }
 
     /**
      * @param stdClass      $json
      * @param string|object $class
+     * @param Callable      $callback
      *
      * @return mixed
      */
-    private function transformObject(\stdClass $json, $class)
+    private function transformObject(\stdClass $json, $class, $callback)
     {
         if (is_string($class)) {
             $object = new $class();
@@ -65,6 +68,10 @@ class Mantle
 
         foreach ($mapping as $destination => $source) {
             $this->map($json, $source, $object, $destination);
+        }
+
+        if ($callback) {
+            call_user_func_array($callback, array($object));
         }
 
         return $object;
