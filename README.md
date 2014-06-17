@@ -243,6 +243,42 @@ There's no requirement for what kind of data source you have to use. You can
 fetch data from a remote server or a local file or even create a `stdClass`
 object in the application itself and map it using Mantle!
 
+### Callbacks
+
+An extra functionality in Mantle is the possibility to specify a callback that's
+called when the transformation of an object is complete. This way, it's possible
+to perform extra operations on each object in an array or a specific object
+without having to do extra work after the transformation. Basically, it changes
+the following piece of code:
+
+```php
+<?php
+$data = ...; // A list of users fetched from somewhere
+$group = new Vendor\Project\Group();
+
+$mantle = new Mantle();
+$users = $mantle->transform($data, 'Vendor\Project\User');
+
+foreach ($users as $user) {
+    $user->setGroup($group);
+}
+```
+
+To this:
+
+```php
+$data = ...; // A list of users fetched from somewhere
+$group = new Vendor\Project\Group();
+
+$mantle = new Mantle();
+$users = $mantle->transform($data, 'Vendor\Project\User', function ($user) use ($group) {
+    $user->setGroup($group);
+});
+```
+
+It's, of course, totally up to you whether you want to use a closure, the name
+of a function or even a class method!
+
 ## Testing
 
 Mantle is fully unit tested. The tests can be run with PHPUnit:
