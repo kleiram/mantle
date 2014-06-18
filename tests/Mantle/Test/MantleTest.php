@@ -1,9 +1,9 @@
 <?php
-namespace League\Mantle\Test;
+namespace Mantle\Test;
 
-use League\Mantle\Mantle;
-use League\Mantle\Stub\User;
-use League\Mantle\Stub\Profile;
+use Mantle\Mantle;
+use Mantle\Stub\User;
+use Mantle\Stub\Profile;
 
 class MantleTest extends \PHPUnit_Framework_TestCase
 {
@@ -17,29 +17,29 @@ class MantleTest extends \PHPUnit_Framework_TestCase
 
     public function testTransformJsonArrayIntoArrayOfObjects()
     {
-        $data = json_decode(file_get_contents(__DIR__.'/../../../data/users.json'));
+        $data = json_decode(file_get_contents(__DIR__.'/../../data/users.json'));
 
         $mantle  = new Mantle();
-        $objects = $mantle->transform($data, 'League\Mantle\Stub\User');
+        $objects = $mantle->transform($data, 'Mantle\Stub\User');
 
         $this->assertCount(2, $objects);
-        $this->assertInstanceOf('League\Mantle\Stub\User', $objects[0]);
-        $this->assertInstanceOf('League\Mantle\Stub\User', $objects[1]);
+        $this->assertInstanceOf('Mantle\Stub\User', $objects[0]);
+        $this->assertInstanceOf('Mantle\Stub\User', $objects[1]);
     }
 
     public function testTransformJsonObjectIntoObject()
     {
-        $data = json_decode(file_get_contents(__DIR__.'/../../../data/user.json'));
+        $data = json_decode(file_get_contents(__DIR__.'/../../data/user.json'));
 
         $mantle = new Mantle();
-        $user = $mantle->transform($data, 'League\Mantle\Stub\User');
+        $user = $mantle->transform($data, 'Mantle\Stub\User');
 
-        $this->assertInstanceOf('League\Mantle\Stub\User', $user);
+        $this->assertInstanceOf('Mantle\Stub\User', $user);
         $this->assertEquals('alice', $user->username);
         $this->assertEquals('alice@example.org', $user->email);
         $this->assertEquals('http://example.org/users/alice/profile', $user->profileUrl);
         $this->assertEquals(new \DateTime('Tue Aug 28 21:16:23 +0000 2012'), $user->registeredAt);
-        $this->assertInstanceOf('League\Mantle\Stub\Profile', $user->profile);
+        $this->assertInstanceOf('Mantle\Stub\Profile', $user->profile);
         $this->assertEquals('Alice', $user->profile->firstName);
         $this->assertEquals('Doe', $user->profile->lastName);
         $this->assertEquals('127.0.0.1', $user->profile->location);
@@ -47,7 +47,7 @@ class MantleTest extends \PHPUnit_Framework_TestCase
 
     public function testTransformJsonObjectIntoExistingObject()
     {
-        $data = json_decode(file_get_contents(__DIR__.'/../../../data/user.json'));
+        $data = json_decode(file_get_contents(__DIR__.'/../../data/user.json'));
         $user = new User();
 
         $user->age = 33;
@@ -65,12 +65,12 @@ class MantleTest extends \PHPUnit_Framework_TestCase
         $mantle = new Mantle();
         $user = $mantle->transform($data, $user);
 
-        $this->assertInstanceOf('League\Mantle\Stub\User', $user);
+        $this->assertInstanceOf('Mantle\Stub\User', $user);
         $this->assertEquals('alice', $user->username);
         $this->assertEquals('alice@example.org', $user->email);
         $this->assertEquals('http://example.org/users/alice/profile', $user->profileUrl);
         $this->assertEquals(new \DateTime('Tue Aug 28 21:16:23 +0000 2012'), $user->registeredAt);
-        $this->assertInstanceOf('League\Mantle\Stub\Profile', $user->profile);
+        $this->assertInstanceOf('Mantle\Stub\Profile', $user->profile);
         $this->assertEquals('Alice', $user->profile->firstName);
         $this->assertEquals('Doe', $user->profile->lastName);
         $this->assertEquals('127.0.0.1', $user->profile->location);
@@ -92,10 +92,10 @@ class MantleTest extends \PHPUnit_Framework_TestCase
 
     public function testCallsCallbackWhenTransformingObject()
     {
-        $data = json_decode(file_get_contents(__DIR__.'/../../../data/user.json'));
+        $data = json_decode(file_get_contents(__DIR__.'/../../data/user.json'));
 
         $mantle = new Mantle();
-        $user = $mantle->transform($data, 'League\Mantle\Stub\User', function ($user) {
+        $user = $mantle->transform($data, 'Mantle\Stub\User', function ($user) {
             $user->username = 'user_'. $user->username;
         });
 
@@ -104,10 +104,10 @@ class MantleTest extends \PHPUnit_Framework_TestCase
 
     public function testCallsCallbackWhenTransformingArray()
     {
-        $data = json_decode(file_get_contents(__DIR__.'/../../../data/users.json'));
+        $data = json_decode(file_get_contents(__DIR__.'/../../data/users.json'));
 
         $mantle = new Mantle();
-        $users = $mantle->transform($data, 'League\Mantle\Stub\User', function ($user) {
+        $users = $mantle->transform($data, 'Mantle\Stub\User', function ($user) {
             $user->username = 'user_'. $user->username;
         });
 

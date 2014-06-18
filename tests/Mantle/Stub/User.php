@@ -1,5 +1,5 @@
 <?php
-namespace League\Mantle\Stub;
+namespace Mantle\Stub;
 
 class User
 {

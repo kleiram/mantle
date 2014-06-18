@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit bootstrap="vendor/autoload.php">
     <testsuites>
-        <testsuite name="League Mantle Test Suite">
-            <directory>tests/League</directory>
+        <testsuite name="Mantle Test Suite">
+            <directory>tests/Mantle</directory>
         </testsuite>
     </testsuites>
     <filter>
         <whitelist>
-            <directory suffix=".php">src/League</directory>
+            <directory suffix=".php">src/Mantle</directory>
         </whitelist>
     </filter>
 </phpunit>

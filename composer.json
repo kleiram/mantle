@@ -1,11 +1,12 @@
 {
-    "name": "league/mantle",
-    "description": "",
+    "name": "mantle/mantle",
+    "description": "Easy model mapping",
     "keywords": [
-        "league",
-        "package"
+        "api",
+        "models",
+        "mapping"
     ],
-    "homepage": "https://github.com/thephpleague/mantle",
+    "homepage": "https://github.com/kleiram/mantle",
     "license": "MIT",
     "authors": [
         {
@@ -20,7 +21,7 @@
     },
     "autoload": {
         "psr-0": {
-            "League": ["src", "tests"]
+            "Mantle": ["src", "tests"]
         }
     }
 }

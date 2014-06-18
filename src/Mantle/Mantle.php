@@ -1,5 +1,5 @@
 <?php
-namespace League\Mantle;
+namespace Mantle;
 
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
