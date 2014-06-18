@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Mantle by kleiram</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Mantle</h1>
+          <h2>Easy model mapping</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/kleiram/Mantle/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/kleiram/Mantle/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/kleiram/Mantle" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h1>
+<a name="mantle" class="anchor" href="#mantle"><span class="octicon octicon-link"></span></a>Mantle</h1>
+
+<p>Mantle makes it easy to write a simple model layer for your PHP applications.</p>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>Via Composer:</p>
+
+<div class="highlight highlight-json"><pre><span class="p">{</span>
+    <span class="nt">"require"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">"mantle/mantle"</span><span class="p">:</span> <span class="s2">"~1.0"</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>What's wrong with the way models are usually written in PHP?</p>
+
+<p>Let's use the GitHub API as an example. How would one usually represent a
+<a href="https://developer.github.com/v3/issues/#get-a-single-issue">GitHub issue</a> in PHP?</p>
+
+<div class="highlight highlight-php"><pre><span class="o">&lt;?</span><span class="nx">php</span>
+<span class="k">class</span> <span class="nc">Issue</span>
+<span class="p">{</span>
+    <span class="k">const</span> <span class="no">STATE_CLOSED</span>  <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">STATE_OPEN</span>    <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+    <span class="sd">/** @var string */</span>
+    <span class="k">public</span> <span class="nv">$url</span><span class="p">;</span>
+
+    <span class="sd">/** @var string */</span>
+    <span class="k">public</span> <span class="nv">$htmlUrl</span><span class="p">;</span>
+
+    <span class="sd">/** @var integer */</span>
+    <span class="k">public</span> <span class="nv">$number</span><span class="p">;</span>
+
+    <span class="sd">/** @var integer */</span>
+    <span class="k">public</span> <span class="nv">$state</span><span class="p">;</span>
+
+    <span class="sd">/** @var string */</span>
+    <span class="k">public</span> <span class="nv">$reporterLogin</span><span class="p">;</span>
+
+    <span class="sd">/** @var User */</span>
+    <span class="k">public</span> <span class="nv">$assignee</span><span class="p">;</span>
+
+    <span class="sd">/** @var DateTime */</span>
+    <span class="k">public</span> <span class="nv">$updatedAt</span><span class="p">;</span>
+
+    <span class="sd">/** @var string */</span>
+    <span class="k">public</span> <span class="nv">$title</span><span class="p">;</span>
+
+    <span class="sd">/** @var string */</span>
+    <span class="k">public</span> <span class="nv">$body</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>Seems perfectly fine! Now, what happens when we want to map a JSON response from
+the GitHub API to this model? We end up with a <em>lot</em> of mapping code:</p>
+
+<div class="highlight highlight-php"><pre><span class="o">&lt;?</span><span class="nx">php</span>
+<span class="nv">$json</span> <span class="o">=</span> <span class="o">...</span><span class="p">;</span> <span class="c1">// Get response from GitHub API</span>
+
+<span class="nv">$assignee</span>   <span class="o">=</span> <span class="k">new</span> <span class="nx">User</span><span class="p">();</span>
+<span class="nv">$issue</span>      <span class="o">=</span> <span class="k">new</span> <span class="nx">Issue</span><span class="p">();</span>
+
+<span class="nv">$issue</span><span class="o">-&gt;</span><span class="na">url</span>             <span class="o">=</span> <span class="nv">$json</span><span class="o">-&gt;</span><span class="na">url</span><span class="p">;</span>
+<span class="nv">$issue</span><span class="o">-&gt;</span><span class="na">htmlUrl</span>         <span class="o">=</span> <span class="nv">$json</span><span class="o">-&gt;</span><span class="na">html_url</span><span class="p">;</span>
+<span class="nv">$issue</span><span class="o">-&gt;</span><span class="na">number</span>          <span class="o">=</span> <span class="nv">$json</span><span class="o">-&gt;</span><span class="na">number</span><span class="p">;</span>
+<span class="nv">$issue</span><span class="o">-&gt;</span><span class="na">updatedAt</span>       <span class="o">=</span> <span class="k">new</span> <span class="nx">\DateTime</span><span class="p">(</span><span class="nv">$json</span><span class="o">-&gt;</span><span class="na">updated_at</span><span class="p">);</span>
+
+<span class="nv">$issue</span><span class="o">-&gt;</span><span class="na">title</span>           <span class="o">=</span> <span class="nv">$json</span><span class="o">-&gt;</span><span class="na">title</span><span class="p">;</span>
+<span class="nv">$issue</span><span class="o">-&gt;</span><span class="na">body</span>            <span class="o">=</span> <span class="nv">$json</span><span class="o">-&gt;</span><span class="na">body</span><span class="p">;</span>
+
+<span class="nv">$issue</span><span class="o">-&gt;</span><span class="na">reporterLogin</span>   <span class="o">=</span> <span class="nv">$json</span><span class="o">-&gt;</span><span class="na">user</span><span class="o">-&gt;</span><span class="na">login</span><span class="p">;</span>
+<span class="nv">$issue</span><span class="o">-&gt;</span><span class="na">assignee</span>        <span class="o">=</span> <span class="nv">$assignee</span><span class="p">;</span>
+
+<span class="nv">$issue</span><span class="o">-&gt;</span><span class="na">state</span>           <span class="o">=</span> <span class="nv">$json</span><span class="o">-&gt;</span><span class="na">state</span> <span class="o">==</span> <span class="s1">'open'</span> <span class="o">?</span> <span class="nx">Issue</span><span class="o">::</span><span class="na">STATE_OPEN</span> <span class="o">:</span> <span class="nx">Issue</span><span class="o">::</span><span class="na">STATE_CLOSED</span><span class="p">;</span>
+
+<span class="c1">// And even more code to parse the assignee property!</span>
+</pre></div>
+
+<p>Whoaw, that is a lot of boilerplate code for something that is so common! And
+even now there are still issues:</p>
+
+<ul>
+<li>If the <code>url</code> or <code>html_url</code> fields are missing in the response, an error will
+be thrown;</li>
+<li>
+<p>There is no way to update a <code>Issue</code> with new data from the server;</p>
+
+<h2>
+<a name="insert-mantle" class="anchor" href="#insert-mantle"><span class="octicon octicon-link"></span></a>Insert Mantle</h2>
+</li>
+</ul><p>This is where Mantle comes in! Using Mantle, the above code can be changed into:</p>
+
+<div class="highlight highlight-php"><pre><span class="nv">$json</span> <span class="o">=</span> <span class="o">...</span><span class="p">;</span> <span class="c1">// Get response from GitHub API</span>
+
+<span class="nv">$mantle</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Mantle\Mantle</span><span class="p">();</span>
+<span class="nv">$issue</span>  <span class="o">=</span> <span class="nv">$mantle</span><span class="o">-&gt;</span><span class="na">transform</span><span class="p">(</span><span class="nv">$json</span><span class="p">,</span> <span class="s1">'Issue'</span><span class="p">);</span>
+</pre></div>
+
+<p>It's that easy! Mantle will try and build the object by looking at properties in
+the class that you specifiy (it should be the <code>FQCN</code>) and it will even try to
+convert <code>camelCase</code> names to <code>snake_case</code>!</p>
+
+<h3>
+<a name="property-mapping" class="anchor" href="#property-mapping"><span class="octicon octicon-link"></span></a>Property mapping</h3>
+
+<p>The only thing it will not do (and that's a good thing, since it won't know what
+to do) is convert nested properties (such as the <code>reporterLogin</code> property).</p>
+
+<p>Luckily, you won't have to do that by hand after the <code>Issue</code> object is created!
+Mantle will try and look for a <code>getPropertyMapping</code> method in your <code>Model</code>
+class, and if it exists, use that mapping over the one it creates by itself.
+That means that our <code>Issue</code> model has to be extended a little bit:</p>
+
+<div class="highlight highlight-php"><pre><span class="o">&lt;?</span><span class="nx">php</span>
+<span class="k">class</span> <span class="nc">Issue</span>
+<span class="p">{</span>
+    <span class="c1">// Properties</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">getPropertyMapping</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="k">array</span><span class="p">(</span>
+            <span class="s1">'reporterLogin'</span> <span class="o">=&gt;</span> <span class="s1">'user.login'</span>
+        <span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>Mantle expects that an array is returned from the <code>getPropertyMapping</code> method
+in which the keys of the array are the properties of the model and the
+values are JSON key-paths. If you don't implement this method, Mantle will
+still work, it just won't handle nested values.</p>
+
+<p>If there are some properties that exist both in the model and the JSON object
+that you (for some reason) don't want mapped, you can set a <code>null</code> value as
+the value for the property:</p>
+
+<div class="highlight highlight-php"><pre><span class="o">&lt;?</span><span class="nx">php</span>
+<span class="k">return</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">'unmapped-property'</span> <span class="o">=&gt;</span> <span class="k">null</span>
+<span class="p">);</span>
+</pre></div>
+
+<h3>
+<a name="transformers" class="anchor" href="#transformers"><span class="octicon octicon-link"></span></a>Transformers</h3>
+
+<p>If we look at the <code>Issue</code> model again, there are some things that might raise
+questions: the <code>updatedAt</code>, <code>assignee</code> and <code>state</code> properties.</p>
+
+<p>You can let Mantle handle this too by specifying <em>transformers</em>. A transformer
+is a method that transforms an input value to another output value.</p>
+
+<p>Transforming these properties is really easy. All you have to do is create some
+extra methods in your model. For the <code>updatedAt</code> and <code>state</code> properties, they
+might look something like this:</p>
+
+<div class="highlight highlight-php"><pre><span class="k">public</span> <span class="k">function</span> <span class="nf">updatedAtTransformer</span><span class="p">(</span><span class="nv">$updatedAt</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">\DateTime</span><span class="p">(</span><span class="nv">$updatedAt</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="k">function</span> <span class="nf">stateTransformer</span><span class="p">(</span><span class="nv">$state</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="nv">$state</span> <span class="o">==</span> <span class="s1">'open'</span> <span class="o">?</span> <span class="k">static</span><span class="o">::</span><span class="na">STATE_OPEN</span> <span class="o">:</span> <span class="k">static</span><span class="o">::</span><span class="na">STATE_CLOSED</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>Mantle expects transformers to have the name <code>[property]Transformer</code>.</p>
+
+<p>This leaves us with only one thing left: the <code>assignee</code> property. As usual,
+you'll only have to define one extra (really simple) method to transform
+this property:</p>
+
+<div class="highlight highlight-php"><pre><span class="k">public</span> <span class="k">function</span> <span class="nf">assigneeClass</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="s1">'User'</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>(It's assumed that a <code>User</code> class exists).</p>
+
+<p>Mantle expects that you return the <code>FQCN</code> of the class for the class that you
+want the JSON object to be transformed into. It can even handle arrays for you!
+Let's say that you have a JSON response like so (not related to the GitHub API):</p>
+
+<div class="highlight highlight-json"><pre><span class="p">{</span>
+    <span class="nt">"username"</span><span class="p">:</span> <span class="s2">"bob"</span><span class="p">,</span>
+    <span class="nt">"tickets"</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">"title"</span><span class="p">:</span> <span class="s2">"Foo"</span><span class="p">,</span>
+            <span class="nt">"body"</span><span class="p">:</span> <span class="s2">"Lorem ipsum dolor sit amet"</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">"title"</span><span class="p">:</span> <span class="s2">"Bar"</span><span class="p">,</span>
+            <span class="nt">"body"</span><span class="p">:</span> <span class="s2">"Lorem ipsum dolor sit amet"</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">"title"</span><span class="p">:</span> <span class="s2">"Baz"</span><span class="p">,</span>
+            <span class="nt">"body"</span><span class="p">:</span> <span class="s2">"Lorem ipsum dolor sit amet"</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>You can then (in a fictive <code>User</code> model) implement the <code>ticketsClass</code> method
+that returns (for example) <code>Vendor\Project\Model\Ticket</code>. Mantle will transform
+the <code>tickets</code> field in the JSON response into an array of <code>Ticket</code> models for
+you!</p>
+
+<h3>
+<a name="existing-objects" class="anchor" href="#existing-objects"><span class="octicon octicon-link"></span></a>Existing objects</h3>
+
+<p>It happens (sometimes) that you want to update an existing object with new data
+from the server. Well, Mantle handles that too! Instead of passing class name
+as the second argument for Mantle you can pass an existing object:</p>
+
+<div class="highlight highlight-php"><pre><span class="o">&lt;?</span><span class="nx">php</span>
+<span class="nv">$data</span> <span class="o">=</span> <span class="o">...</span><span class="p">;</span> <span class="c1">// Fetch user data from somewhere</span>
+
+<span class="nv">$mantle</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Mantle</span><span class="p">();</span>
+<span class="nv">$user</span>   <span class="o">=</span> <span class="nv">$mantle</span><span class="o">-&gt;</span><span class="na">transform</span><span class="p">(</span><span class="nv">$data</span><span class="p">,</span> <span class="s1">'User'</span><span class="p">);</span>
+
+<span class="c1">// A lot of stuff happens, maybe some time passes</span>
+
+<span class="nv">$data</span> <span class="o">=</span> <span class="o">...</span><span class="p">;</span> <span class="c1">// Fetch fresh user data from somewhere</span>
+<span class="nv">$user</span> <span class="o">=</span> <span class="nv">$mantle</span><span class="o">-&gt;</span><span class="na">transform</span><span class="p">(</span><span class="nv">$data</span><span class="p">,</span> <span class="nv">$user</span><span class="p">);</span>
+</pre></div>
+
+<p>The only requirement is that the <code>$data</code> passed is actually an <code>stdClass</code> object
+and not an <code>array</code> (an array wouldn't make sense in this case since you're only
+transforming a single object).</p>
+
+<h3>
+<a name="data-source" class="anchor" href="#data-source"><span class="octicon octicon-link"></span></a>Data source</h3>
+
+<p>There's no requirement for what kind of data source you have to use. You can
+fetch data from a remote server or a local file or even create a <code>stdClass</code>
+object in the application itself and map it using Mantle!</p>
+
+<h3>
+<a name="callbacks" class="anchor" href="#callbacks"><span class="octicon octicon-link"></span></a>Callbacks</h3>
+
+<p>An extra functionality in Mantle is the possibility to specify a callback that's
+called when the transformation of an object is complete. This way, it's possible
+to perform extra operations on each object in an array or a specific object
+without having to do extra work after the transformation. Basically, it changes
+the following piece of code:</p>
+
+<div class="highlight highlight-php"><pre><span class="o">&lt;?</span><span class="nx">php</span>
+<span class="nv">$data</span> <span class="o">=</span> <span class="o">...</span><span class="p">;</span> <span class="c1">// A list of users fetched from somewhere</span>
+<span class="nv">$group</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Vendor\Project\Group</span><span class="p">();</span>
+
+<span class="nv">$mantle</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Mantle</span><span class="p">();</span>
+<span class="nv">$users</span> <span class="o">=</span> <span class="nv">$mantle</span><span class="o">-&gt;</span><span class="na">transform</span><span class="p">(</span><span class="nv">$data</span><span class="p">,</span> <span class="s1">'Vendor\Project\User'</span><span class="p">);</span>
+
+<span class="k">foreach</span> <span class="p">(</span><span class="nv">$users</span> <span class="k">as</span> <span class="nv">$user</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$user</span><span class="o">-&gt;</span><span class="na">setGroup</span><span class="p">(</span><span class="nv">$group</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>To this:</p>
+
+<div class="highlight highlight-php"><pre><span class="nv">$data</span> <span class="o">=</span> <span class="o">...</span><span class="p">;</span> <span class="c1">// A list of users fetched from somewhere</span>
+<span class="nv">$group</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Vendor\Project\Group</span><span class="p">();</span>
+
+<span class="nv">$mantle</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Mantle</span><span class="p">();</span>
+<span class="nv">$users</span> <span class="o">=</span> <span class="nv">$mantle</span><span class="o">-&gt;</span><span class="na">transform</span><span class="p">(</span><span class="nv">$data</span><span class="p">,</span> <span class="s1">'Vendor\Project\User'</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$user</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$group</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$user</span><span class="o">-&gt;</span><span class="na">setGroup</span><span class="p">(</span><span class="nv">$group</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<p>It's, of course, totally up to you whether you want to use a closure, the name
+of a function or even a class method!</p>
+
+<h2>
+<a name="testing" class="anchor" href="#testing"><span class="octicon octicon-link"></span></a>Testing</h2>
+
+<p>Mantle is fully unit tested. The tests can be run with PHPUnit:</p>
+
+<pre lang="shell"><code>$ phpunit
+</code></pre>
+
+<h2>
+<a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2>
+
+<p>Please see <a href="https://github.com/kleiram/mantle/blob/master/CONTRIBUTING.md">CONTRIBUTING</a>
+for details.</p>
+
+<h2>
+<a name="credits" class="anchor" href="#credits"><span class="octicon octicon-link"></span></a>Credits</h2>
+
+<ul>
+<li><a href="https://github.com/kleiram">Ramon Kleiss</a></li>
+<li><a href="https://github.com/kleiram/mantle/contributors">All Contributors</a></li>
+</ul><h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>The MIT License (MIT). Please see <a href="https://github.com/kleiram/mantle/blob/master/LICENSE">License File</a>
+for more information.</p>
+        </section>
+
+        <footer>
+          Mantle is maintained by <a href="https://github.com/kleiram">kleiram</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
+    </div>
+  </body>
+</html>
