@@ -9,7 +9,7 @@ Via Composer:
 ```json
 {
     "require": {
-        "league/mantle": "~1.0"
+        "mantle/mantle": "~1.0"
     }
 }
 ```
@@ -289,15 +289,15 @@ $ phpunit
 
 ## Contributing
 
-Please see [CONTRIBUTING](https://github.com/thephpleague/mantle/blob/master/CONTRIBUTING.md)
+Please see [CONTRIBUTING](https://github.com/kleiram/mantle/blob/master/CONTRIBUTING.md)
 for details.
 
 ## Credits
 
  - [Ramon Kleiss](https://github.com/kleiram)
- - [All Contributors](https://github.com/thephpleague/mantle/contributors)
+ - [All Contributors](https://github.com/kleiram/mantle/contributors)
 
 ## License
 
-The MIT License (MIT). Please see [License File](https://github.com/thephpleague/mantle/blob/master/LICENSE)
+The MIT License (MIT). Please see [License File](https://github.com/kleiram/mantle/blob/master/LICENSE)
 for more information.
