@@ -16,18 +16,18 @@ class Mantle
      * @return mixed
      * @throws InvalidArgumentException
      */
-    public function transform($json, $class, $callback = null)
+    public static function transform($json, $class, $callback = null)
     {
         if (is_array($json)) {
             if (is_string($class)) {
-                return $this->transformArray($json, $class, $callback);
+                return static::transformArray($json, $class, $callback);
             } else {
                 throw new \InvalidArgumentException(
                     'Cannot transform a JSON array into an existing object'
                 );
             }
         } elseif ($json instanceof \stdClass) {
-            return $this->transformObject($json, $class, $callback);
+            return static::transformObject($json, $class, $callback);
         } else {
             throw new \InvalidArgumentException(
                 'The $json argument must be either an array or an instance of stdClass'
@@ -42,10 +42,10 @@ class Mantle
      *
      * @return mixed
      */
-    private function transformArray(array $json, $class, $callback)
+    private static function transformArray(array $json, $class, $callback)
     {
         return array_map(function ($json) use ($class, $callback) {
-            return $this->transformObject($json, $class, $callback);
+            return static::transformObject($json, $class, $callback);
         }, $json);
     }
 
@@ -56,7 +56,7 @@ class Mantle
      *
      * @return mixed
      */
-    private function transformObject(\stdClass $json, $class, $callback)
+    private static function transformObject(\stdClass $json, $class, $callback)
     {
         if (is_string($class)) {
             $object = new $class();
@@ -64,10 +64,8 @@ class Mantle
             $object = $class;
         }
 
-        $mapping = $this->getPropertyMapping($object);
-
-        foreach ($mapping as $destination => $source) {
-            $this->map($json, $source, $object, $destination);
+        foreach (static::getPropertyMapping($object) as $destination => $source) {
+            static::map($json, $source, $object, $destination);
         }
 
         if ($callback) {
@@ -82,7 +80,7 @@ class Mantle
      *
      * @return array
      */
-    private function getPropertyMapping($object)
+    private static function getPropertyMapping($object)
     {
         $mapping = array();
         $reflection = new \ReflectionClass($object);
@@ -122,7 +120,7 @@ class Mantle
      * @param mixed    $object
      * @param string   $destination
      */
-    private function map(\stdClass $json, $source, $object, $destination)
+    private static function map(\stdClass $json, $source, $object, $destination)
     {
         $accessor = PropertyAccess::createPropertyAccessor();
 
@@ -131,7 +129,7 @@ class Mantle
             $value = $accessor->getValue($json, $source);
         } catch (\Exception $e) {
             try {
-                $value = $accessor->getValue($json, $this->camelCaseToSnakeCase($source));
+                $value = $accessor->getValue($json, static::camelCaseToSnakeCase($source));
             } catch (\Exception $e) {
                 return;
             }
@@ -153,7 +151,7 @@ class Mantle
         $classMethod = $destination .'Class';
 
         if (method_exists($object, $classMethod)) {
-            $value = $this->transform($value, $object->$classMethod());
+            $value = static::transform($value, $object->$classMethod());
         }
 
         // Set the value on the object
@@ -167,7 +165,7 @@ class Mantle
      *
      * @see http://stackoverflow.com/questions/1993721/how-to-convert-camelcase-to-camel-case
      */
-    private function camelCaseToSnakeCase($string)
+    private static function camelCaseToSnakeCase($string)
     {
         preg_match_all('!([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)!', $string, $matches);
         $ret = $matches[0];

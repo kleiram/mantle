@@ -26,6 +26,6 @@ class User
 
     public function profileClass()
     {
-        return 'League\Mantle\Stub\Profile';
+        return 'Mantle\Stub\Profile';
     }
 }

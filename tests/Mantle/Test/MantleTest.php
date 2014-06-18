@@ -11,16 +11,14 @@ class MantleTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('InvalidArgumentException');
 
-        $mantle = new Mantle();
-        $mantle->transform('foo', null);
+        Mantle::transform('foo', null);
     }
 
     public function testTransformJsonArrayIntoArrayOfObjects()
     {
         $data = json_decode(file_get_contents(__DIR__.'/../../data/users.json'));
 
-        $mantle  = new Mantle();
-        $objects = $mantle->transform($data, 'Mantle\Stub\User');
+        $objects = Mantle::transform($data, 'Mantle\Stub\User');
 
         $this->assertCount(2, $objects);
         $this->assertInstanceOf('Mantle\Stub\User', $objects[0]);
@@ -31,8 +29,7 @@ class MantleTest extends \PHPUnit_Framework_TestCase
     {
         $data = json_decode(file_get_contents(__DIR__.'/../../data/user.json'));
 
-        $mantle = new Mantle();
-        $user = $mantle->transform($data, 'Mantle\Stub\User');
+        $user = Mantle::transform($data, 'Mantle\Stub\User');
 
         $this->assertInstanceOf('Mantle\Stub\User', $user);
         $this->assertEquals('alice', $user->username);
@@ -62,8 +59,7 @@ class MantleTest extends \PHPUnit_Framework_TestCase
         $user->profile->lastName = 'Doe';
         $user->profile->location = 'Amsterdam';
 
-        $mantle = new Mantle();
-        $user = $mantle->transform($data, $user);
+        $user = Mantle::transform($data, $user);
 
         $this->assertInstanceOf('Mantle\Stub\User', $user);
         $this->assertEquals('alice', $user->username);
@@ -86,16 +82,14 @@ class MantleTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $mantle = new Mantle();
-        $mantle->transform($data, $data);
+        Mantle::transform($data, $data);
     }
 
     public function testCallsCallbackWhenTransformingObject()
     {
         $data = json_decode(file_get_contents(__DIR__.'/../../data/user.json'));
 
-        $mantle = new Mantle();
-        $user = $mantle->transform($data, 'Mantle\Stub\User', function ($user) {
+        $user = Mantle::transform($data, 'Mantle\Stub\User', function ($user) {
             $user->username = 'user_'. $user->username;
         });
 
@@ -106,8 +100,7 @@ class MantleTest extends \PHPUnit_Framework_TestCase
     {
         $data = json_decode(file_get_contents(__DIR__.'/../../data/users.json'));
 
-        $mantle = new Mantle();
-        $users = $mantle->transform($data, 'Mantle\Stub\User', function ($user) {
+        $users = Mantle::transform($data, 'Mantle\Stub\User', function ($user) {
             $user->username = 'user_'. $user->username;
         });
 
