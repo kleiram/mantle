@@ -95,10 +95,11 @@ even now there are still issues:
 This is where Mantle comes in! Using Mantle, the above code can be changed into:
 
 ```php
+use Mantle\Mantle;
+
 $json = ...; // Get response from GitHub API
 
-$mantle = new Mantle\Mantle();
-$issue  = $mantle->transform($json, 'Issue');
+$issue  = Mantle::transform($json, 'Issue');
 ```
 
 It's that easy! Mantle will try and build the object by looking at properties in
@@ -222,15 +223,16 @@ as the second argument for Mantle you can pass an existing object:
 
 ```php
 <?php
+use Mantle\Mantle;
+
 $data = ...; // Fetch user data from somewhere
 
-$mantle = new Mantle();
-$user   = $mantle->transform($data, 'User');
+$user   = Mantle::transform($data, 'User');
 
 // A lot of stuff happens, maybe some time passes
 
 $data = ...; // Fetch fresh user data from somewhere
-$user = $mantle->transform($data, $user);
+$user = Mantle::transform($data, $user);
 ```
 
 The only requirement is that the `$data` passed is actually an `stdClass` object
@@ -253,11 +255,12 @@ the following piece of code:
 
 ```php
 <?php
+use Mantle\Mantle;
+
 $data = ...; // A list of users fetched from somewhere
 $group = new Vendor\Project\Group();
 
-$mantle = new Mantle();
-$users = $mantle->transform($data, 'Vendor\Project\User');
+$users = Mantle::transform($data, 'Vendor\Project\User');
 
 foreach ($users as $user) {
     $user->setGroup($group);
@@ -267,11 +270,12 @@ foreach ($users as $user) {
 To this:
 
 ```php
+use Mantle\Mantle;
+
 $data = ...; // A list of users fetched from somewhere
 $group = new Vendor\Project\Group();
 
-$mantle = new Mantle();
-$users = $mantle->transform($data, 'Vendor\Project\User', function ($user) use ($group) {
+$users = Mantle::transform($data, 'Vendor\Project\User', function ($user) use ($group) {
     $user->setGroup($group);
 });
 ```
