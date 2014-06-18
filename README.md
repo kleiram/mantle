@@ -291,6 +291,12 @@ Mantle is fully unit tested. The tests can be run with PHPUnit:
 $ phpunit
 ```
 
+## Attributions
+
+For those of you who are familiar with Objective-C, this library will look familiar. This
+is because it's based on the Objective-C library [Mantle](https://github.com/Mantle/Mantle)
+(that's why it's named the same way).
+
 ## Contributing
 
 Please see [CONTRIBUTING](https://github.com/kleiram/mantle/blob/master/CONTRIBUTING.md)
