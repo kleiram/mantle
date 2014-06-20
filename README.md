@@ -295,7 +295,9 @@ $ phpunit
 
 For those of you who are familiar with Objective-C, this library will look familiar. This
 is because it's based on the Objective-C library [Mantle](https://github.com/Mantle/Mantle)
-(that's why it's named the same way).
+(that's why it's named the same way). If you ever need to have data-mapping in Objective-C,
+I can highly recommend it. I built this library because I wanted to have the same functionality
+in PHP.
 
 ## Contributing
 
