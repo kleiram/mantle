@@ -19,7 +19,9 @@ class Mantle
     public static function transform($json, $class, $callback = null)
     {
         if (is_array($json)) {
-            if (is_string($class)) {
+            if (empty($json)) {
+                return array();
+            } if (is_string($class)) {
                 return static::transformArray($json, $class, $callback);
             } else {
                 throw new \InvalidArgumentException(

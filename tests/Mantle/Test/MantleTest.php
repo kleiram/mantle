@@ -7,6 +7,14 @@ use Mantle\Stub\Profile;
 
 class MantleTest extends \PHPUnit_Framework_TestCase
 {
+    public function testTransformEmptyJsonArray()
+    {
+        $data    = json_decode(file_get_contents(__DIR__.'/../../data/empty.json'));
+        $objects = Mantle::transform($data->data, 'Mantle\Stub\User');
+
+        $this->assertCount(0, $objects);
+    }
+
     public function testThrowsExceptionOnInvalidArgument()
     {
         $this->setExpectedException('InvalidArgumentException');
