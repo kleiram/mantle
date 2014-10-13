@@ -21,7 +21,7 @@ class Mantle
         if (is_array($json)) {
             if (empty($json)) {
                 return array();
-            } if (is_string($class)) {
+            } elseif (is_string($class)) {
                 return static::transformArray($json, $class, $callback);
             } else {
                 throw new \InvalidArgumentException(
